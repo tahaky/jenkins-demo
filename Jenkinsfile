@@ -1,7 +1,4 @@
 pipeline{
-    environment {
-        tagName=${env.TAG_NAME}
-    }
     agent any
     stages{
         stage("build"){
