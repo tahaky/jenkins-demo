@@ -3,7 +3,7 @@ pipeline{
         label "node"
     }
     stages{
-        stage("clonning repository"){
+        stage("clon"){
           echo "====++++hello++++===="
         }
     }
