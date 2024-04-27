@@ -1,5 +1,8 @@
 pipeline{
     agent any
+     parameters {
+    gitParameter branchFilter: 'origin/(.*)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH'
+   }
     stages{
         stage("build"){
             steps{
@@ -8,7 +11,7 @@ pipeline{
         }
         stage("docker image"){
             steps{
-                  bat  "docker build -t ${env.BRANCH_NAME} ."
+                 git branch: "${params.BRANCH}", url: 'https://github.com/jenkinsci/git-parameter-plugin.git'
             }
         }
     }
