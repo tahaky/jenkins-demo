@@ -19,7 +19,7 @@ pipeline{
         }
         stage("docker image"){
             steps{
-                  bat  "docker build -t ${env.TAG_NAME} ."
+                  bat  "docker build -t ${env.BRANCH_NAME} ."
             }
             post{
                 always{
