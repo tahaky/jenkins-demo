@@ -1,49 +1,59 @@
-pipeline{
-    agent any
-    stages{
-        stage("build"){
-            steps{
-               bat 'mvn compile'
-            }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========build executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
-                }
-            }
+pipeline {
+  agent any
+  stages {
+    stage('build') {
+      post {
+        always {
+          echo '========always========'
         }
-        stage("docker image"){
-            steps{
-                  bat  "docker build -t ${env.GIT_BRANCH} ."
-            }
-            post{
-                always{
-                    echo "====++++always++++===="
-                }
-                success{
-                    echo "====++++docker image executed successfully++++===="
-                }
-                failure{
-                    echo "====++++docker image execution failed++++===="
-                }
-        
-            }
+
+        success {
+          echo '========build executed successfully========'
         }
+
+        failure {
+          echo '========A execution failed========'
+        }
+
+      }
+      steps {
+        bat 'mvn compile'
+      }
     }
-    post{
-        always{
-            echo "========always========"
+
+    stage('docker image') {
+      post {
+        always {
+          echo '====++++always++++===='
         }
-        success{
-            echo "========pipeline executed successfully ========"
+
+        success {
+          echo '====++++docker image executed successfully++++===='
         }
-        failure{
-            echo "========pipeline execution failed========"
+
+        failure {
+          echo '====++++docker image execution failed++++===='
         }
+
+      }
+      steps {
+        bat "docker build -t ${env.GIT_BRANCH} ."
+      }
     }
+
+  }
+  post {
+    always {
+      echo '========always========'
+    }
+
+    success {
+      echo '========pipeline executed successfully ========'
+    }
+
+    failure {
+      echo '========pipeline execution failed========'
+    }
+
+  }
 }
