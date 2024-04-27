@@ -6,14 +6,10 @@ pipeline{
     stages{
         stage("build"){
             steps{
-               bat 'mvn compile'
+               bat "echo ${params.BRANCH}"
             }
         }
-        stage("docker image"){
-            steps{
-                 git branch: "${params.BRANCH}", url: 'https://github.com/jenkinsci/git-parameter-plugin.git'
-            }
-        }
+
     }
     post{
         always{
