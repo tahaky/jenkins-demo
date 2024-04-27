@@ -6,23 +6,46 @@ pipeline{
     stages{
         stage("build"){
             steps{
-               bat "mvn install"
+               sh "mvn install"
                echo "---Project dependency's succesfuly installed---"
-               bat "mvn test"
+               sh "mvn test"
                echo "---Project passed all of the test---"
-               bat "docker build -t demo-${params.BRANCH} ."
+               sh "docker build -t demo-${params.BRANCH} ."
+                     post{
+                success{
+                    echo "---build stage executed successfully---"
+                }
+                failure{
+                    echo "---build stage execution failed---"
+                }
+        
+            }
+            }
+        }
+        stage("A"){
+            steps{
+                echo "====++++executing A++++===="
+            }
+            post{
+                always{
+                    echo "====++++always++++===="
+                }
+                success{
+                    echo "====++++A executed successfully++++===="
+                }
+                failure{
+                    echo "====++++A execution failed++++===="
+                }
+        
             }
         }
     }
     post{
-        always{
-            echo "========always========"
-        }
         success{
-            echo "========pipeline executed successfully ========"
+            echo "---pipeline executed successfully---"
         }
         failure{
-            echo "========pipeline execution failed========"
+            echo "---pipeline execution failed---"
         }
     }
 }
