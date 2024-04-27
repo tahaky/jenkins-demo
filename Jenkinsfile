@@ -8,7 +8,7 @@ pipeline{
         }
         stage("docker image"){
             steps{
-                  bat  "docker build -t ${env.GIT_TAG} ."
+                  bat  "docker build -t ${env.TAG_NAME} ."
             }
         }
     }
