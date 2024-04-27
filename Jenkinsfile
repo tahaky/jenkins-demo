@@ -10,7 +10,7 @@ pipeline{
                echo "---Project dependency's succesfuly installed---"
                bat "mvn test"
                echo "---Project passed all of the test---"
-               bat "docker build -t demo-${params.BRANCH}"
+               bat "docker build -t demo-${params.BRANCH} ."
             }
         }
     }
