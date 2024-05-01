@@ -16,7 +16,8 @@ pipeline{
             steps{
               git branch: 'main', credentialsId: 'github', url: 'https://github.com/tahaky/jenkinsDemo/releases/${TAG}'
             }
-        stage("Build"){
+   }
+    stage("Build"){
             steps{
               sh 'mvn clean package'
             }
@@ -26,6 +27,5 @@ pipeline{
               sh 'mvn test'
             }
         }
-   }
 }
 }
