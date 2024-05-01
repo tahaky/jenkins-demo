@@ -14,7 +14,15 @@ pipeline{
         }
         stage("Checkout F SCM"){
             steps{
-              git branch: 'main', credentialsId: 'github', url: 'https://github.com/tahaky/jenkinsDemo'
+              git branch: 'main', credentialsId: 'github', url: 'https://github.com/tahaky/jenkinsDemo/releases/${TAG}'
+            }1
+        stage("Build"){
+            steps{
+              sh 'mvn clean package'
+            }
+        stage("Test"){
+            steps{
+              sh 'mvn test'
             }
         }
    }
