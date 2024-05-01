@@ -15,7 +15,7 @@ pipeline{
  
         stage("Checkout F SCM"){
             steps{
-              git branch: 'main', cretentialId: 'github', url: 'https://github.com/tahaky/jenkinsDemo'
+              git branch: 'main', cretentialsId: 'github', url: 'https://github.com/tahaky/jenkinsDemo'
             }
         }
    }
