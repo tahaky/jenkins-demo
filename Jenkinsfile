@@ -15,7 +15,6 @@ pipeline{
         stage("Checkout F SCM"){
             steps{
               git branch: 'main', credentialsId: 'github', url: 'https://github.com/tahaky/jenkinsDemo/releases/${TAG}'
-              echo '${TAG}'
             }
         stage("Build"){
             steps{
@@ -27,6 +26,4 @@ pipeline{
             }
         }
    }
-}
-}
 }
