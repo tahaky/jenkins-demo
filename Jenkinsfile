@@ -22,7 +22,7 @@ pipeline {
         }
         stage("Checkout F SCM") {
             steps {
-                git branch: 'main', credentialsId: 'jenkins-github', url: 'https://github.com/tahaky/jenkinsDemo'
+                git branch: 'main', credentialsId: 'jenkins-github', url: 'https://github.com/tahaky/jenkins-demo'
             }
         }
         stage("Build") {
