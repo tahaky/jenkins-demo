@@ -10,7 +10,6 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>jenkins-demo</artifactId>
-	<version>1.0.0</version>
 	<name>jenkins-demo</name>
 	<description>Demo project for jenkins with spring boot</description>
 	<properties>
@@ -41,6 +40,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
