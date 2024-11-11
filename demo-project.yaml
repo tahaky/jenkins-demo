@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  demo-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: demo-project
+  template:
+    metadata:
+      labels:
+        app: demo-project
+    spec:
+      containers:
+      - name: demo-project
+        image: tahakaya/jenkins-demo:latest
+        ports:
+        - containerPort: 8080 
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: demo-project
+spec:
+  selector:
+    app: demo-project
+  type: LoadBalancer
+  ports:
+  - name: tcp
+    port: 8085
+    targetPort:  8080

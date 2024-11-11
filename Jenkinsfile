@@ -1,16 +1,13 @@
 pipeline {
-    agent {
-        label "worker-node"
-    }
+    agent any
     tools {
-        jdk 'Java17'
-        maven 'Maven3'
+        maven "M3"
     }
     environment {
         APP_NAME = "jenkins-demo"
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
-        DOCKER_PASS = 'dockerhub'
+        DOCKER_PASS = 'docker-id'
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
@@ -35,16 +32,6 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage("Sonarqube Analysis") {
-                steps {
-                script {
-                            withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token') {
-                            sh "mvn sonar:sonar"
-                        }
-                }
-                }
-            }
-
         stage("Build & Push Docker Image") {
             steps {
                 script {
