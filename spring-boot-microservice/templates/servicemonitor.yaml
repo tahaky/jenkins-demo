@@ -1,0 +1,33 @@
+{{- if .Values.metricsConfig.enabled }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "spring-boot-microservice.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  {{- if .Values.metricsConfig.annotations }}
+  annotations:
+    {{- range $key, $value := .Values.metricsConfig.annotations }}
+    {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "spring-boot-microservice.labels" . | nindent 4 }}
+    {{- if .Values.metricsConfig.labels }}
+      {{- range $key, $value := .Values.metricsConfig.labels }}
+      {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+      {{- end }}
+    {{- end }}
+spec:
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+    {{- include "spring-boot-microservice.selectorLabels" . | nindent 6 }}
+  endpoints:
+    - port: {{ .Values.metricsConfig.port }}
+      path: {{ .Values.metricsConfig.path }}
+      interval: {{ .Values.metricsConfig.interval }}
+      scrapeTimeout: {{ .Values.metricsConfig.scrapeTimeout }}
+{{- end }}
