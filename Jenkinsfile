@@ -3,8 +3,7 @@ pipeline {
         label "worker-node"
     }
     tools {
-        jdk 'Java17'
-        maven 'Maven3'
+        maven "M3"
     }
     environment {
         APP_NAME = "jenkins-demo"
