@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label "worker-node"
-    }
+    agent any
     tools {
         maven "M3"
     }
@@ -9,7 +7,7 @@ pipeline {
         APP_NAME = "jenkins-demo"
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
-        DOCKER_PASS = 'dockerhub'
+        DOCKER_PASS = 'docker-id'
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
