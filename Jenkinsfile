@@ -39,7 +39,7 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 script {
-                    dockerImage = docker.build("${HARBOR_REGISTRY}${HARBOR_PROJECT}/${APP_NAME}:${BUILD_NUMBER}")
+                    dockerImage = docker.build("${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}:${BUILD_NUMBER}")
                 }
             }
         }
