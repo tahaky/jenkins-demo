@@ -8,7 +8,7 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
         DOCKER_PASS = 'docker-id'
-        HARBOR_REGISTRY = 'http://192.168.1.35'
+        HARBOR_REGISTRY = '192.168.1.35'
         HARBOR_PROJECT = 'sosyal_plaka'
         DOCKER_CREDENTIALS = 'harbor-credentials-id' // Jenkins'de tanımlanan kimlik bilgisi ID'si
 
