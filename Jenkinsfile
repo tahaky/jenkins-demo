@@ -8,11 +8,9 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
         DOCKER_PASS = 'docker-id'
-        HARBOR_REGISTRY = 'http://192.168.1.35/'
+        HARBOR_REGISTRY = 'http://192.168.1.35'
         HARBOR_PROJECT = 'sosyal_plaka'
         DOCKER_CREDENTIALS = 'harbor-credentials-id' // Jenkins'de tanımlanan kimlik bilgisi ID'si
-
-
 
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
@@ -38,22 +36,24 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage("Build ") {
+        stage("Build Docker Image") {
             steps {
                 script {
-            dockerImage = docker.build registry + "/" + projectName + ":$BUILD_NUMBER"
-
+                    dockerImage = docker.build("${HARBOR_REGISTRY}${HARBOR_PROJECT}/${APP_NAME}:${BUILD_NUMBER}")
                 }
             }
         }
-                stage("Push Image") {
+        stage("Push Image") {
             steps {
                 script {
                     docker.withServer(HARBOR_REGISTRY) {
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harbor-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                            sh "echo ${PASSWORD} | docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker login harbor.sezer.test:443 -u ${USERNAME} --password-stdin"
+                            sh """
+                            echo ${PASSWORD} | docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker login ${HARBOR_REGISTRY} -u ${USERNAME} --password-stdin
+                            docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker push ${HARBOR_REGISTRY}${HARBOR_PROJECT}/${APP_NAME}:${IMAGE_TAG}
+                            """
                         }
-                        sh "docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker push ${registry}/${projectName}:${IMAGE_TAG}"
+                    }
                 }
             }
         }
