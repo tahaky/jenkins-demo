@@ -11,7 +11,8 @@ pipeline {
         HARBOR_REGISTRY = '192.168.1.35'
         HARBOR_PROJECT = 'sosyal_plaka'
         DOCKER_CREDENTIALS = 'harbor-credentials-id' // Jenkins'de tanımlanan kimlik bilgisi ID'si
-
+        USERNAME = 'robot$sosyal_plaka'
+        PASSWORD = 'fspMntyMnXq1qDWlx6bioTRV6AIhQgNg'
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
