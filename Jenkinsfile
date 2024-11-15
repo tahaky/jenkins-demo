@@ -8,6 +8,12 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
         DOCKER_PASS = 'docker-id'
+        HARBOR_REGISTRY = 'http://192.168.1.35/'
+        HARBOR_PROJECT = 'sosyal_plaka'
+        DOCKER_CREDENTIALS = 'harbor-credentials-id' // Jenkins'de tanımlanan kimlik bilgisi ID'si
+
+
+
         IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
@@ -32,17 +38,22 @@ pipeline {
                 sh 'mvn test'
             }
         }
-        stage("Build & Push Docker Image") {
+        stage("Build ") {
             steps {
                 script {
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image = docker.build "${IMAGE_NAME}"
-                    }
+            dockerImage = docker.build registry + "/" + projectName + ":$BUILD_NUMBER"
 
-                    docker.withRegistry('',DOCKER_PASS) {
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
+                }
+            }
+        }
+                stage("Push Image") {
+            steps {
+                script {
+                    docker.withServer(HARBOR_REGISTRY) {
+                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harbor-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                            sh "echo ${PASSWORD} | docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker login harbor.sezer.test:443 -u ${USERNAME} --password-stdin"
+                        }
+                        sh "docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker push ${registry}/${projectName}:${IMAGE_TAG}"
                 }
             }
         }
