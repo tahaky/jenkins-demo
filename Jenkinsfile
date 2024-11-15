@@ -47,13 +47,9 @@ pipeline {
         stage("Push Image") {
             steps {
                 script {
-                    docker.withServer(HARBOR_REGISTRY) {
-                        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harbor-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                            sh """
-                            echo ${PASSWORD} | docker  ${HARBOR_REGISTRY} --config /bitnami/jenkins/home/.docker login ${HARBOR_REGISTRY} -u ${USERNAME} --password-stdin
-                            docker  ${HARBOR_REGISTRY} --config /bitnami/jenkins/home/.docker push ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}:${IMAGE_TAG}
-                            """
-                        }
+                    docker login "${HARBOR_REGISTRY}/${HARBOR_PROJECT}" -u ${USERNAME} -p ${PASSWORD}
+                docker push "${HARBOR_REGISTRY}/${HARBOR_PROJECT}":${BRANCH}-${GIT_COMMIT_SHORT}-${BUILD_DATETIME}-${BUILD_NUMBER}
+
                     }
                 }
             }
