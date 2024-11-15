@@ -7,13 +7,10 @@ pipeline {
         APP_NAME = "jenkins-demo"
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
-        DOCKER_PASS = 'docker-id'
-        HARBOR_REGISTRY = '192.168.1.35'
-        HARBOR_PROJECT = 'sosyal_plaka'
-        DOCKER_CREDENTIALS = 'harbor-credentials-id' // Jenkins'de tanımlanan kimlik bilgisi ID'si
-        USERNAME = 'robot$sosyal_plaka'
-        PASSWORD = 'fspMntyMnXq1qDWlx6bioTRV6AIhQgNg'
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        HARBOR_REGISTRY = "192.168.1.35"
+        HARBOR_PROJECT = "sosyal_plaka"
+        DOCKER_CREDENTIALS = "harbor-credentials-id" // Jenkins'de tanımlanan kimlik bilgisi ID'si
+        IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
     stages {
@@ -40,16 +37,24 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 script {
-                    dockerImage = docker.build("${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}:${BUILD_NUMBER}")
+                    dockerImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
         stage("Push Image") {
             steps {
                 script {
-                    docker login "${HARBOR_REGISTRY}/${HARBOR_PROJECT}" -u ${USERNAME} -p ${PASSWORD}
-                docker push "${HARBOR_REGISTRY}/${HARBOR_PROJECT}":${BRANCH}-${GIT_COMMIT_SHORT}-${BUILD_DATETIME}-${BUILD_NUMBER}
-
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        // Docker Login
+                        sh """
+                        echo $PASSWORD | docker login ${HARBOR_REGISTRY} -u $USERNAME --password-stdin
+                        """
+                        // Docker Push
+                        sh """
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+                        docker push ${IMAGE_NAME}:latest
+                        """
                     }
                 }
             }
