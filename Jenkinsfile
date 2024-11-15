@@ -9,7 +9,7 @@ pipeline {
         DOCKER_USER = "tahakaya"
         HARBOR_REGISTRY = "192.168.1.35"
         HARBOR_PROJECT = "sosyal_plaka"
-        DOCKER_CREDENTIALS = "harbor-credentials-id" // Jenkins'de tanımlanan kimlik bilgisi ID'si
+        DOCKER_CREDENTIALS = "harbor-id" // Jenkins'de tanımlanan kimlik bilgisi ID'si
         IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
     }
