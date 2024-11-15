@@ -50,7 +50,7 @@ pipeline {
                         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'harbor-id', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                             sh """
                             echo ${PASSWORD} | docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker login ${HARBOR_REGISTRY} -u ${USERNAME} --password-stdin
-                            docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker push ${HARBOR_REGISTRY}${HARBOR_PROJECT}/${APP_NAME}:${IMAGE_TAG}
+                            docker -H tcp://127.0.0.1:2376 --config /bitnami/jenkins/home/.docker push ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}:${IMAGE_TAG}
                             """
                         }
                     }
