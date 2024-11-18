@@ -47,7 +47,10 @@ pipeline {
                     docker.withRegistry('HARBOR_REGISTRY', 'harbor-id') {
                     def customImage = docker.build(" ${IMAGE_NAME}:${IMAGE_TAG}")
                     customImage.push()
-                    
+                    }
+                }
+
+                
                 }
             }
         }
