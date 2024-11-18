@@ -7,7 +7,7 @@ pipeline {
         APP_NAME = "jenkins-demo"
         RELEASE = "1.0.0"
         DOCKER_USER = "tahakaya"
-        HARBOR_REGISTRY = "192.168.1.35"
+        HARBOR_REGISTRY = "harbor.ayrotek.com"
         HARBOR_PROJECT = "sosyal_plaka"
         DOCKER_CREDENTIALS = "harbor-id" // Jenkins'de tanımlanan kimlik bilgisi ID'si
         IMAGE_NAME = "${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${APP_NAME}"
@@ -19,7 +19,7 @@ pipeline {
                 cleanWs()
             }
         }
-        stage("Checkout F SCM") {
+        stage("Checkout SCM") {
             steps {
                 git branch: 'main', credentialsId: 'jenkins-github', url: 'https://github.com/tahaky/jenkins-demo'
             }
@@ -44,13 +44,10 @@ pipeline {
         stage("Push Image") {
             steps {
                 script {
-                    docker.withRegistry('HARBOR_REGISTRY', 'harbor-id') {
-                    def customImage = docker.build(" ${IMAGE_NAME}:${IMAGE_TAG}")
-                    customImage.push()
+                    docker.withRegistry("https://${HARBOR_REGISTRY}", 'harbor-id') {
+                        def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                        customImage.push()
                     }
-                }
-
-                
                 }
             }
         }
