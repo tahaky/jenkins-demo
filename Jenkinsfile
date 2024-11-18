@@ -44,18 +44,10 @@ pipeline {
         stage("Push Image") {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        // Docker Login
-                        sh """
-                        echo $PASSWORD | docker login ${HARBOR_REGISTRY} -u $USERNAME --password-stdin
-                        """
-                        // Docker Push
-                        sh """
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
-                        docker push ${IMAGE_NAME}:latest
-                        """
-                    }
+                    docker.withRegistry('HARBOR_REGISTRY', 'harbor-id') {
+                    def customImage = docker.build(" ${IMAGE_NAME}:${IMAGE_TAG}")
+                    customImage.push()
+                    
                 }
             }
         }
